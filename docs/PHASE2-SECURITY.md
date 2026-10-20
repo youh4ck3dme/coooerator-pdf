@@ -18,4 +18,18 @@ Scope: Operator Cockpit PWA. This is a frontend preview, **not** a deployed Book
 ## Automated gates
 
 - `npm ci`
-- `npm run security:r¶»§q«^
+- `npm run security:runtime` (fails for moderate-or-greater production dependencies)
+- `npm run lint`
+- `npm run build`
+- `npm run smoke` (checks standalone PWA manifest, Czech HTML, routes, service worker, icons)
+
+The smoke command starts a local Vite preview. For an already deployed, public Vercel deployment, run `SMOKE_URL=https://your-deployment.example npm run smoke` to additionally validate HTTP security headers.
+
+## Outstanding issues / follow-ups
+
+1. **No authenticated provider backend yet.** `VITE_API_BASE_URL` is public and optional. Do not put Booking, Airbnb or OpenAI secrets into any `VITE_*` setting.
+2. **API fallback:** currently an unknown `/api/... ` path returns the SPA shell as HTTP 200, not JSON 404. Add a backend/router exclusion before wiring real API endpoints. Clients check JSON Content-Type and will report a controlled error, but this HTTP behavior needs correction.
+3. Full-dev audit findings need a separately tested Tailwind 4 migration or upstream fixes. Runtime audit zero is **not** a claim that the full dependency graph is clean.
+4. No real logged-in end-to-end channel integration test can pass without an approved, authenticated backend and test credentials.
+5. Review GitHub branch protection, required CI checks, CodeQL, and Vercel preview protection in account settings.
+6. Add browser-based E2E checks before enabling protected data or publishing integrations.
